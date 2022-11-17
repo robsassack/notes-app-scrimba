@@ -14,6 +14,7 @@ export default function App() {
   );
 
   React.useEffect(() => {
+    // add notes to local storage
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
@@ -27,13 +28,18 @@ export default function App() {
   }
 
   function updateNote(text) {
-    setNotes((oldNotes) =>
-      oldNotes.map((oldNote) => {
-        return oldNote.id === currentNoteId
-          ? { ...oldNote, body: text }
-          : oldNote;
-      })
-    );
+    // puts the updated note at the top of the list
+    setNotes((prevNotes) => {
+      let newNotes = [];
+      prevNotes.forEach((note) => {
+        if (note.id === currentNoteId) {
+          newNotes.unshift({ ...note, body: text });
+        } else {
+          newNotes.push(note);
+        }
+      });
+      return newNotes;
+    });
   }
 
   function findCurrentNote() {
